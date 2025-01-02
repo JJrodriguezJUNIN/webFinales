@@ -1,15 +1,4 @@
-// Inicializar Firebase (CON TU CONFIGURACIÓN)
-const firebaseConfig = {
-  apiKey: "AIzaSyAJDW1lZuh4swoKG4FZkPjvCMRUnvvPHL0",
-  authDomain: "appfinales.firebaseapp.com",
-  projectId: "appfinales",
-  storageBucket: "appfinales.firebasestorage.app",
-  messagingSenderId: "55034439618",
-  appId: "1:55034439618:web:5103e4b70a536583dd585b"
-};
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore(app);
+import { db } from './firebase-config.js';
 
 // Obtener referencias a los elementos del formulario
 const dniInput = document.getElementById('dni');
@@ -26,7 +15,7 @@ registerButton.addEventListener('click', (event) => {
     const email = emailInput.value;
     const nombre = nombreInput.value;
     const password = passwordInput.value;
-
+    console.log("Datos a enviar a Firebase:", { dni, email, nombre, password });
     errorMessage.textContent = '';
 
     if (!dni || !email || !nombre || !password) {

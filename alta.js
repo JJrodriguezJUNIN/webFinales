@@ -1,3 +1,4 @@
+// Inicializar Firebase (CON TU CONFIGURACIÓN)
 const firebaseConfig = {
     apiKey: "AIzaSyAJDW1lZuh4swoKG4FZkPjvCMRUnvvPHL0",
     authDomain: "appfinales.firebaseapp.com",
@@ -5,8 +6,8 @@ const firebaseConfig = {
     storageBucket: "appfinales.firebasestorage.app",
     messagingSenderId: "55034439618",
     appId: "1:55034439618:web:5103e4b70a536583dd585b"
-  };
-/ Inicializar Firebase
+};
+
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore(app);
@@ -27,9 +28,8 @@ registerButton.addEventListener('click', (event) => {
     const nombre = nombreInput.value;
     const password = passwordInput.value;
 
-    errorMessage.textContent = ''; // Limpiar mensajes de error anteriores
+    errorMessage.textContent = '';
 
-    // Validación básica en el cliente (¡IMPORTANTE!)
     if (!dni || !email || !nombre || !password) {
         errorMessage.textContent = 'Por favor, completa todos los campos.';
         return;

@@ -10,7 +10,7 @@ function doPost(e) {
     sheet.appendRow([nombre, email, usuario, contrasena, new Date()]);
 
     return HtmlService.createHtmlOutput('<!DOCTYPE html><html><head><script>'+
-    'function redirect() { window.location.href = "index.html"; }'+ // ¡REEMPLAZAR!
+    'function redirect() { window.location.href = "https://jjrodriguezjunin.github.io/webFinales/"; }'+ // ¡REEMPLAZAR!
     'function showModal() {'+
     ' document.getElementById("myModal").style.display = "block";'+
     '}' +

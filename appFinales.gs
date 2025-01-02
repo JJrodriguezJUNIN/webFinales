@@ -5,8 +5,7 @@ function doGet(e) {
   if (destino === "exito") {
     urlRedireccion = "https://jjrodriguezjunin.github.io/webFinales/"; // ¡REEMPLAZAR CON TU URL!
   } else {
-    // Si no hay parámetro 'destino' o no es "exito", no se hace nada.
-    // Se podría mostrar un mensaje de error o una página por defecto si se desea.
+     Logger.log("Error en la carga de datos..");
     return ContentService.createTextOutput("Parámetro destino inválido o no proporcionado.").setMimeType(ContentService.MimeType.TEXT); // Mensaje de error
   }
 

@@ -1,5 +1,5 @@
 function doPost(e) {
-    var ss = SpreadsheetApp.openById("ID_DE_TU_HOJA_DE_CALCULO"); // ¡REEMPLAZAR!
+    var ss = SpreadsheetApp.openById("1zVTuUyZ6G1gFZzulgEJFnZ8z4CoDJXTzELTu8hK7S34"); // ¡REEMPLAZAR!
     var sheet = ss.getSheetByName("Hoja1"); // ¡REEMPLAZAR si es necesario!
 
     var nombre = e.parameter.nombre;

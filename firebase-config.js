@@ -12,3 +12,4 @@ const db = firebase.firestore(app);
 
 //exportar db para usar en otros archivos
 export { db };
+console.log("firebase-config")

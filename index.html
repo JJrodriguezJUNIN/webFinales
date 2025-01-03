@@ -1,140 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Académico</title>
-    <style>
-       body {
-    font-family: 'Arial', sans-serif;
-    background: radial-gradient(circle, rgba(220,230,240,1) 0%, rgba(190,200,210,1) 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    overflow: hidden;
-    color: #333; /* Color de texto principal */
-}
-
-.container { /* Contenedor general para centrar el contenido */
-    max-width: 800px;
-    width: 90%;
-    margin: 20px auto;
-    padding: 20px;
-}
-
-.login-container, .user-container { /* Estilos comunes para ambos contenedores */
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    max-width: 95%;
-    backdrop-filter: blur(5px);
-    width: 400px; /* Ancho fijo para el contenedor */
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    font-size: 16px;
-    transition: border-color 0.3s ease; /* Transición suave para el borde */
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus {
-    border-color: #007bff; /* Borde azul al enfocar */
-    outline: none; /* Quitar el outline predeterminado */
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2); /* Sombra suave al enfocar */
-}
-
-button, .register-button { /* Estilos comunes para botones */
-    background-color: #007bff;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    text-decoration: none; /* Para quitar el subrayado en el enlace */
-    text-align: center; /* Centrar el texto en el botón/enlace */
-    display: inline-block;
-}
-
-button:hover, .register-button:hover {
-    background-color: #0056b3;
-}
-
-.error-message {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
-}
-
-.user-data { /* Estilos para la información del usuario */
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.user-data p {
-    margin-bottom: 8px;
-}
-
-#logoutButton {
-    margin-top: 20px;
-    background-color: #dc3545; /* Rojo para el botón de cerrar sesión */
-}
-
-#logoutButton:hover {
-    background-color: #bd2130;
-}
-    </style>
-</head>
+    </head>
 <body>
     <div class="login-container">
-        <h2>Acceso al área de finales</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="dni">DNI:</label>
-                <input type="text" id="dni" name="dni" required>
-            </div>
-            <div class="form-group">
-                <label for="contrasena">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Iniciar Sesión</button>
-            </div>
-            <div class="register-link">
-                <a href="registro.html" class="register-button">Registrarse</a>
-            </div>
-            <div class="error-message" id="error-message"></div>
-        </form>
+        <div class="error-message" id="error-message"></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -143,14 +13,10 @@ button:hover, .register-button:hover {
     <script type="module" src="firebase-config.js"></script>
 
     <script type="module">
-        import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-        import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
-        import { app } from './firebase-config.js';
+        import { signInWithDNIAndPassword } from './firebase-auth.js';
+        import { displayError, redirectTo } from './ui-handler.js';
 
-        const auth = getAuth(app);
-        const db = getFirestore(app);
         const form = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('error-message');
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -158,37 +24,20 @@ button:hover, .register-button:hover {
             const dni = document.getElementById('dni').value;
             const contrasena = document.getElementById('contrasena').value;
 
-            errorMessage.textContent = ""; // Limpiar mensajes de error
-
             try {
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, where("dni", "==", dni));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    errorMessage.textContent = "Usuario no encontrado.";
-                    return;
-                }
-
-                let userData;
-                querySnapshot.forEach((doc) => {
-                    userData = doc.data();
-                });
-
-                await signInWithEmailAndPassword(auth, userData.email, contrasena);
-
-                localStorage.setItem('userData', JSON.stringify(userData));
-                window.location.href = "usuarios.html";
-
+                await signInWithDNIAndPassword(dni, contrasena);
+                redirectTo("usuarios.html");
             } catch (error) {
                 console.error("Error al iniciar sesión:", error);
-                if (error.code === 'auth/invalid-credential') {
-                    errorMessage.textContent = "Credenciales incorrectas.";
-                } else if (error.code === 'auth/user-not-found'){
-                    errorMessage.textContent = "Usuario no encontrado";
-                }
-                else {
-                    errorMessage.textContent = "Error al iniciar sesión. Inténtelo nuevamente más tarde.";
+                switch (error.code) {
+                    case "auth/user-not-found":
+                        displayError("Usuario no encontrado.");
+                        break;
+                    case "auth/invalid-credential":
+                        displayError("Credenciales incorrectas.");
+                        break;
+                    default:
+                        displayError("Error al iniciar sesión. Inténtelo nuevamente más tarde.");
                 }
             }
         });

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página de Usuarios</title>
+    <style> /* Tu CSS */ </style>
+</head>
+<body>
+    <div class="container">
+        <div class="user-container">
+            <h2>Bienvenido</h2>
+            <div class="user-data" id="userData"></div>
+            <button id="logoutButton">Cerrar Sesión</button>
+        </div>
+    </div>
+    <script type="module">
+        import { signOut } from './firebase-auth.js';
+        import { redirectTo } from './ui-handler.js';
+
+        const userDataDiv = document.getElementById('userData');
+        const logoutButton = document.getElementById('logoutButton');
+        const userData = JSON.parse(localStorage.getItem('userData'));
+
+        if (userData) {
+            userDataDiv.innerHTML = `
+                <p>Nombre: ${userData.nombre}</p>
+                <p>Email: ${userData.email}</p>
+                <p>DNI: ${userData.dni}</p>
+                `;
+        } else {
+            redirectTo("index.html");
+        }
+
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut();
+                redirectTo('index.html');
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error);
+                alert("Error al cerrar sesión."); // O usa displayError si quieres un manejo de errores más sofisticado
+            }
+        });
+    </script>
+</body>
+</html>

@@ -5,18 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso Académico</title>
     <style>
-        /* Tu CSS aquí (manteniendo tu estilo) */
-        body { /* Ejemplo, reemplaza con tu estilo */
-            font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, rgba(220,230,240,1) 0%, rgba(190,200,210,1) 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        /* ... el resto de tu CSS */
+       body {
+    font-family: 'Arial', sans-serif;
+    background: radial-gradient(circle, rgba(220,230,240,1) 0%, rgba(190,200,210,1) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: #333; /* Color de texto principal */
+}
+
+.container { /* Contenedor general para centrar el contenido */
+    max-width: 800px;
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.login-container, .user-container { /* Estilos comunes para ambos contenedores */
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 95%;
+    backdrop-filter: blur(5px);
+    width: 400px; /* Ancho fijo para el contenedor */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease; /* Transición suave para el borde */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #007bff; /* Borde azul al enfocar */
+    outline: none; /* Quitar el outline predeterminado */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2); /* Sombra suave al enfocar */
+}
+
+button, .register-button { /* Estilos comunes para botones */
+    background-color: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* Para quitar el subrayado en el enlace */
+    text-align: center; /* Centrar el texto en el botón/enlace */
+    display: inline-block;
+}
+
+button:hover, .register-button:hover {
+    background-color: #0056b3;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.user-data { /* Estilos para la información del usuario */
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.user-data p {
+    margin-bottom: 8px;
+}
+
+#logoutButton {
+    margin-top: 20px;
+    background-color: #dc3545; /* Rojo para el botón de cerrar sesión */
+}
+
+#logoutButton:hover {
+    background-color: #bd2130;
+}
     </style>
 </head>
 <body>

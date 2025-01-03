@@ -5,103 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso Académico</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, rgba(220,230,240,1) 0%, rgba(190,200,210,1) 100%); /* Degradado radial */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden; /* Evita scrollbar si el contenido es muy alto */
-        }
-
-        .login-container {
-            background-color: rgba(255, 255, 255, 0.9); /* Blanco con ligera transparencia */
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
-            width: 400px;
-            max-width: 90%;
-            backdrop-filter: blur(5px); /* Desenfoque del fondo */
-        }
-
-        .login-container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-        .error-message {
-            color: red;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .register-link {
-    text-align: center;
-    margin-top: 15px;
-}
-
-.register-button { /* Estilos para el enlace como botón */
-    display: inline-block; /* Para que se comporte como un bloque pero en línea */
-    background-color: #007bff;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none; /* Quita el subrayado del enlace */
-    transition: background-color 0.3s ease;
-    font-size: 16px; /* Para que tenga el mismo tamaño que el otro botón */
-}
-
-.register-button:hover {
-    background-color: #0056b3;
-}
-
+        /* Your existing styles here */
     </style>
 </head>
 <body>
 
     <div class="login-container">
         <h2>Acceso al area de finales</h2>
-        <form action="#" method="post">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="dni">DNI:</label>
                 <input type="text" id="dni" name="dni" required>
@@ -119,20 +30,65 @@
             <div class="error-message" id="error-message"></div>
         </form>
     </div>
-   
-    <script>
-        const form = document.querySelector('form');
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
+    <script type="module" src="firebase-config.js"></script>
+
+    <script type="module">
+        import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+        import { getFirestore, doc, getDoc } from "firebase/firestore";
+        import { app } from './firebase-config.js';
+
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const form = document.getElementById('loginForm');
         const errorMessage = document.getElementById('error-message');
 
-        form.addEventListener('submit', (event) => {
-            const usuario = document.getElementById('usuario').value;
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+
+            const dni = document.getElementById('dni').value;
             const contrasena = document.getElementById('contrasena').value;
 
-            if (usuario === "" || contrasena === "") {
-                event.preventDefault();
+            if (!dni || !contrasena) {
                 errorMessage.textContent = "Por favor, complete todos los campos.";
-            } else {
-                errorMessage.textContent = "";
+                return;
+            }
+
+            try {
+                // First, find the user document based on DNI
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("dni", "==", dni));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                  errorMessage.textContent = "Usuario no encontrado.";
+                  return;
+                }
+
+                let userData;
+                querySnapshot.forEach((doc) => {
+                  userData = doc.data();
+                });
+
+                // Now, use email/password for authentication
+                await signInWithEmailAndPassword(auth, userData.email, contrasena);
+
+                // Store user data in local storage
+                localStorage.setItem('userData', JSON.stringify(userData));
+
+                // Redirect to the users page
+                window.location.href = "usuarios.html";
+
+            } catch (error) {
+                console.error("Error al iniciar sesión:", error);
+                if (error.code === 'auth/invalid-credential') {
+                    errorMessage.textContent = "Credenciales incorrectas.";
+                } else {
+                    errorMessage.textContent = "Error al iniciar sesión. Inténtelo nuevamente más tarde.";
+                }
             }
         });
     </script>

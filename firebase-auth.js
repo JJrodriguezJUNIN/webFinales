@@ -1,6 +1,6 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
-import { app } from './firebase-config.js'; // Importa tu configuración de Firebase
+import { app } from './firebase-config.js';
 
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -12,7 +12,7 @@ export async function signInWithDNIAndPassword(dni, password) {
         const querySnapshot = await getDocs(q);
 
         if (querySnapshot.empty) {
-            throw new Error("Usuario no encontrado."); // Lanza un error si no se encuentra el usuario
+            throw new Error("auth/user-not-found"); // Error más específico
         }
 
         let userData;
@@ -21,10 +21,15 @@ export async function signInWithDNIAndPassword(dni, password) {
         });
 
         await signInWithEmailAndPassword(auth, userData.email, password);
-        localStorage.setItem('userData', JSON.stringify(userData)); // Guarda los datos en localStorage
-        return userData; // Retorna los datos del usuario si la autenticación es exitosa
+        localStorage.setItem('userData', JSON.stringify(userData));
+        return userData;
 
     } catch (error) {
-        throw error; // Re-lanza el error para que se maneje en el archivo principal
+        throw error;
     }
+}
+
+export function signOut() {
+    localStorage.removeItem('userData');
+    return auth.signOut();
 }

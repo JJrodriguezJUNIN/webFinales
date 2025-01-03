@@ -1,4 +1,4 @@
-import { db } from './firebase-config.js';
+import { auth,db } from './firebase-config.js';
 
 // Obtener referencias a los elementos del formulario
 const dniInput = document.getElementById('dni');

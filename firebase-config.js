@@ -1,6 +1,5 @@
-// Tu configuración de Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAJDW1lZuh4swoKG4FZkPjvCMRUnvvPHL0",
+  apiKey: "AIzaSyAJDW1lZuh4swoKG4FZkPjvCMRUnvvPHL0", // Reemplaza con tu configuración
   authDomain: "appfinales.firebaseapp.com",
   projectId: "appfinales",
   storageBucket: "appfinales.firebasestorage.app",
@@ -8,14 +7,11 @@ const firebaseConfig = {
   appId: "1:55034439618:web:5103e4b70a536583dd585b"
 };
 
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
+// Usa firebase.initializeApp, firebase.auth y firebase.firestore
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(app); // Usa firebase.auth(app)
+const db = firebase.firestore(app); // Usa firebase.firestore(app)
 
-// Obtiene las instancias de autenticación y firestore
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// Exporta auth y db para su uso en otros archivos
 export { auth, db };
 
-console.log("firebase-config.js cargado"); // Mensaje informativo
+console.log("firebase-config.js loaded");
